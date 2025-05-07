@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: server
+  datasource:
+    generate-unique-name: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 8080
+
+#jdbc:h2:mem:testdb
