@@ -20,6 +20,10 @@ public class UserDTO {
     private String name;
 
     @NotNull
+    @Size(min = 4)
+    private String username;
+
+    @NotNull
     @Size(min = 6)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
@@ -31,6 +35,7 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
+        this.username = user.getUsername();
         this.password = user.getPassword();
         this.email = user.getEmail();
     }

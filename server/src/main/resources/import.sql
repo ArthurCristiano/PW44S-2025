@@ -1,6 +1,6 @@
 -- User -
-INSERT INTO cad_User(name, password, email) VALUES ('Administrador', 'admin','adm@adm.com');
-INSERT INTO cad_User(name, password, email) VALUES ('Teste', 'test','teste@teste.com');
+INSERT INTO cad_User(name, username, password, email) VALUES ('Administrador', 'admin', 'admin','adm@adm.com');
+INSERT INTO cad_User(name, username, password, email) VALUES ('Teste', 'test', 'test','teste@teste.com');
 
 -- Category
 INSERT INTO cad_category (name) VALUES ('Laptops');
