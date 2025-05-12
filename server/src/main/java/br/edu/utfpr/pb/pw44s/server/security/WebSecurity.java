@@ -59,6 +59,9 @@ public class WebSecurity {
         http.authorizeHttpRequests((authorize) -> authorize
                 //permite que a rota "/users" seja acessada, mesmo sem o usuário estar autenticado desde que o método HTTP da requisição seja POST
                 .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()
+
+                .requestMatchers(antMatcher(HttpMethod.PUT, "/users/**")).authenticated()
+
                 //permite que a rota "/error" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers(antMatcher("/error/**")).permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
@@ -69,6 +72,9 @@ public class WebSecurity {
                 .requestMatchers(antMatcher(HttpMethod.GET, "/categories/**")).permitAll()
 
                 .requestMatchers(antMatcher(HttpMethod.GET, "/products/**")).permitAll()
+
+                .requestMatchers(antMatcher(HttpMethod.GET, "/products/categories/**")).permitAll()
+
                 .anyRequest().authenticated()
         );
         http.authenticationManager(authenticationManager)
