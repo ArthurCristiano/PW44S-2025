@@ -5,6 +5,10 @@ import br.edu.utfpr.pb.pw44s.server.model.Address;
 import br.edu.utfpr.pb.pw44s.server.service.IAddressService;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +33,16 @@ public class AddressController extends CrudController<Address, AddressDTO, Long>
     @Override
     protected ModelMapper getModelMapper() {
         return modelMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<AddressDTO> create(@RequestBody AddressDTO addressDTO) {
+        try {
+            AddressDTO savedAddress = addressService.save(addressDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedAddress);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

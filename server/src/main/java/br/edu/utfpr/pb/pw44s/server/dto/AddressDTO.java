@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class AddressDTO {
     private Long id;
-    private User user;
+    private Long userId;
     private String street;
     private String complement;
     private String zipCode;
