@@ -1,9 +1,9 @@
 package br.edu.utfpr.pb.pw44s.server.dto;
 
-import br.edu.utfpr.pb.pw44s.server.model.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +13,6 @@ import java.time.LocalDateTime;
 public class OrdersDTO {
     private Long id;
     private LocalDateTime date;
-    private User user;
+    private Long userId;
+    private List<OrderItemDTO> items;
 }
