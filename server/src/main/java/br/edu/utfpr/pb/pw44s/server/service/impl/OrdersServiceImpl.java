@@ -1,5 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.service.impl;
 
+import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.OrdersDTO;
 import br.edu.utfpr.pb.pw44s.server.model.OrderItens;
 import br.edu.utfpr.pb.pw44s.server.model.Orders;
@@ -10,7 +11,6 @@ import br.edu.utfpr.pb.pw44s.server.repository.OrdersRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.ProductRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.UserRepository;
 import br.edu.utfpr.pb.pw44s.server.service.IOrdersService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -84,5 +84,30 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
         orderDTO.setUserId(user.getId());
 
         return orderDTO;
+    }
+
+    @Override
+    public List<OrdersDTO> findByUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+
+        return ordersRepository.findByUser(user).stream()
+                .map(order -> {
+                    OrdersDTO dto = modelMapper.map(order, OrdersDTO.class);
+                    dto.setUserId(user.getId());
+
+                    List<OrderItemDTO> itemDTOs = order.getItems().stream().map(item -> {
+                        return OrderItemDTO.builder()
+                                .productId(item.getProduct().getId())
+                                .price(item.getPrice())
+                                .quantity(item.getQuantity())
+                                .build();
+                    }).collect(Collectors.toList());
+
+                    dto.setItems(itemDTOs);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
