@@ -62,6 +62,7 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
         Orders order = new Orders();
         order.setDate(LocalDateTime.now());
         order.setUser(user);
+        order.setStatus("Pendente");
         Orders savedOrder = ordersRepository.save(order);
 
         List<OrderItens> items = orderDTO.getItems().stream().map(itemDTO -> {

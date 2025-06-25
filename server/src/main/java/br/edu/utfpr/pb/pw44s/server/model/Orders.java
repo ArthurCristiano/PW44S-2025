@@ -21,6 +21,8 @@ public class Orders {
 
     private LocalDateTime date;
 
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
