@@ -13,6 +13,7 @@ import java.util.List;
 public class OrdersDTO {
     private Long id;
     private LocalDateTime date;
+    private String status;
     private Long userId;
     private List<OrderItemDTO> items;
 }
