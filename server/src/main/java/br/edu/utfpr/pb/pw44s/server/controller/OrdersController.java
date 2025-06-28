@@ -56,4 +56,15 @@ public class OrdersController extends CrudController<Orders, OrdersDTO, Long>{
         }
     }
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrdersDTO> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
+        try {
+            String cleanStatus = status.replaceAll("\"", "");
+            OrdersDTO updatedOrder = ordersService.updateStatus(id, cleanStatus);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

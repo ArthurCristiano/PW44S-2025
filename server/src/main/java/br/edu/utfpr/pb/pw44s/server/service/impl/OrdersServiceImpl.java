@@ -13,9 +13,11 @@ import br.edu.utfpr.pb.pw44s.server.repository.UserRepository;
 import br.edu.utfpr.pb.pw44s.server.service.IOrdersService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -110,5 +112,17 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public OrdersDTO updateStatus(Long id, String status) {
+        Orders order = ordersRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
+
+        order.setStatus(status);
+        Orders updatedOrder = ordersRepository.save(order);
+
+        return modelMapper.map(updatedOrder, OrdersDTO.class);
     }
 }
