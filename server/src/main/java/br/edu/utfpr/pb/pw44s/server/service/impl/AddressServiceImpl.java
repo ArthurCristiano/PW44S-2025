@@ -12,6 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AddressServiceImpl extends CrudServiceImpl<Address, Long> implements IAddressService {
 
@@ -48,5 +51,15 @@ public class AddressServiceImpl extends CrudServiceImpl<Address, Long> implement
     @Override
     public Address save(Address address) {
         return super.save(address);
+    }
+
+    public List<AddressDTO> findByUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+
+        return addressRepository.findByUser(user)
+                .stream()
+                .map(address -> modelMapper.map(address, AddressDTO.class))
+                .collect(Collectors.toList());
     }
 }
