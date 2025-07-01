@@ -9,4 +9,5 @@ public interface IOrdersService extends ICrudService<Orders, Long> {
     OrdersDTO createOrder(OrdersDTO orderDTO);
     List<OrdersDTO> findByUser();
     OrdersDTO updateStatus(Long id, String status);
+    OrdersDTO updateOrderAddress(Long orderId, Long addressId);
 }

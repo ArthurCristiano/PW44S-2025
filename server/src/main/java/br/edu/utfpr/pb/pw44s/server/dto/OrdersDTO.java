@@ -16,4 +16,5 @@ public class OrdersDTO {
     private String status;
     private Long userId;
     private List<OrderItemDTO> items;
+    private Long addressId;
 }

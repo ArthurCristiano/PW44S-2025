@@ -2,14 +2,8 @@ package br.edu.utfpr.pb.pw44s.server.service.impl;
 
 import br.edu.utfpr.pb.pw44s.server.dto.OrderItemDTO;
 import br.edu.utfpr.pb.pw44s.server.dto.OrdersDTO;
-import br.edu.utfpr.pb.pw44s.server.model.OrderItens;
-import br.edu.utfpr.pb.pw44s.server.model.Orders;
-import br.edu.utfpr.pb.pw44s.server.model.Product;
-import br.edu.utfpr.pb.pw44s.server.model.User;
-import br.edu.utfpr.pb.pw44s.server.repository.OrderItensRepository;
-import br.edu.utfpr.pb.pw44s.server.repository.OrdersRepository;
-import br.edu.utfpr.pb.pw44s.server.repository.ProductRepository;
-import br.edu.utfpr.pb.pw44s.server.repository.UserRepository;
+import br.edu.utfpr.pb.pw44s.server.model.*;
+import br.edu.utfpr.pb.pw44s.server.repository.*;
 import br.edu.utfpr.pb.pw44s.server.service.IOrdersService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,17 +25,20 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final AddressRepository addressRepository;
 
     public OrdersServiceImpl(OrdersRepository ordersRepository,
                              OrderItensRepository orderItensRepository,
                              UserRepository userRepository,
                              ProductRepository productRepository,
-                             ModelMapper modelMapper) {
+                             ModelMapper modelMapper,
+                             AddressRepository addressRepository) {
         this.ordersRepository = ordersRepository;
         this.orderItensRepository = orderItensRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -64,6 +61,7 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
         Orders order = new Orders();
         order.setDate(LocalDateTime.now());
         order.setUser(user);
+        order.setAddress_id(null);
         order.setStatus("Pendente");
         Orders savedOrder = ordersRepository.save(order);
 
@@ -121,6 +119,20 @@ public class OrdersServiceImpl extends CrudServiceImpl<Orders, Long> implements 
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
 
         order.setStatus(status);
+        Orders updatedOrder = ordersRepository.save(order);
+
+        return modelMapper.map(updatedOrder, OrdersDTO.class);
+    }
+
+    @Transactional
+    public OrdersDTO updateOrderAddress(Long orderId, Long addressId) {
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado!"));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Endereço não encontrado!"));
+
+        order.setAddress_id(address);
         Orders updatedOrder = ordersRepository.save(order);
 
         return modelMapper.map(updatedOrder, OrdersDTO.class);

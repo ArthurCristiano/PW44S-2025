@@ -67,4 +67,14 @@ public class OrdersController extends CrudController<Orders, OrdersDTO, Long>{
         }
     }
 
+    @PutMapping("/{orderId}/address/{addressId}")
+    public ResponseEntity<OrdersDTO> updateAddress(@PathVariable Long orderId, @PathVariable Long addressId) {
+        try {
+            OrdersDTO updatedOrder = ordersService.updateOrderAddress(orderId, addressId);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
